@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0F2E5C">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'self' 'unsafe-inline'; worker-src 'self'; manifest-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Quarto Passo</title>
+<style>
+:root{
+  --marinho:#0F2E5C; --azul:#1B4F8C; --medio:#3A72B5; --suave:#8FB4DC;
+  --palido:#DCE9F7; --gelo:#F0F6FC; --branco:#fff;
+  --linha:#C9D6E5; --texto:#233043; --fraco:#67748A;
+  --areia:#FBF7EF; --areiaB:#DFCFAE; --alerta:#8A6D2F; --perigo:#9B2C2C;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --barra:64px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);color:var(--texto);background:var(--gelo);font-size:16px;line-height:1.55;
+  padding-bottom:calc(var(--barra) + env(safe-area-inset-bottom));-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--serif);color:var(--marinho);margin:0;font-weight:700}
+button{font:inherit;color:inherit;cursor:pointer}
+input,textarea,select{font:inherit;color:var(--texto)}
+
+header{position:sticky;top:0;z-index:40;background:var(--marinho);color:#fff;
+  padding:calc(env(safe-area-inset-top) + 12px) 14px 12px;display:flex;align-items:center;gap:10px}
+header .emb{flex:0 0 34px}
+header .tit{flex:1;min-width:0}
+header h1{color:#fff;font-size:1.05rem;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .sub{font-size:.72rem;color:#A9C6E8;letter-spacing:.06em}
+header button.hb{background:rgba(255,255,255,.14);border:0;color:#fff;border-radius:9px;
+  width:44px;height:44px;font-size:1.15rem;display:flex;align-items:center;justify-content:center;flex:0 0 44px}
+header .voltar{display:none}
+header.interna .voltar{display:flex}
+
+main{max-width:640px;margin:0 auto;padding:16px 16px 28px}
+
+.cartao{background:#fff;border:1px solid var(--linha);border-radius:12px;padding:16px;margin-bottom:14px}
+.cartao.aviso{background:var(--areia);border-color:var(--areiaB)}
+.cartao.aviso h3{color:var(--alerta)}
+.cartao.risco{background:#FDF4F4;border-color:#E5C0C0}
+.cartao.risco h3{color:var(--perigo)}
+.cartao h3{font-size:1rem;margin-bottom:8px}
+.cartao p{margin:0 0 10px;font-size:.94rem}
+.cartao p:last-child{margin-bottom:0}
+
+.passo-frase{background:#fff;border-left:5px solid var(--medio);border-radius:0 12px 12px 0;padding:16px 18px;margin-bottom:16px}
+.passo-frase q{font-family:var(--serif);font-style:italic;font-size:1.06rem;color:var(--marinho);quotes:"“" "”"}
+.passo-frase .fonte{display:block;margin-top:8px;font-size:.75rem;color:var(--fraco)}
+
+.resumo{background:linear-gradient(160deg,var(--marinho),var(--azul));color:#fff;border-radius:14px;padding:20px;margin-bottom:16px;text-align:center}
+.resumo .rot{font-size:.8rem;color:#B7D2EE}
+.resumo .anel{margin:10px auto 6px;width:118px;height:118px;position:relative}
+.resumo .anel svg{transform:rotate(-90deg)}
+.resumo .anel span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.75rem;font-weight:700}
+.resumo .nota{font-size:.85rem;color:#CFE0F2;margin-top:4px}
+
+.parte{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:#fff;
+  border:1px solid var(--linha);border-radius:12px;padding:13px 14px;margin-bottom:9px;min-height:64px}
+.parte:active{background:var(--gelo)}
+.parte .n{flex:0 0 34px;height:34px;border-radius:8px;background:var(--palido);color:var(--marinho);
+  font-family:var(--serif);font-weight:700;display:flex;align-items:center;justify-content:center}
+.parte.feita .n{background:var(--marinho);color:#fff}
+.parte .txt{flex:1;min-width:0}
+.parte .txt b{display:block;font-weight:600;font-size:.97rem}
+.parte .txt small{color:var(--fraco);font-size:.8rem}
+.parte .med{flex:0 0 46px;text-align:right;font-size:.78rem;color:var(--medio);font-variant-numeric:tabular-nums}
+
+label.campo{display:block;margin-bottom:14px}
+label.campo > span{display:block;font-weight:600;font-size:.92rem;margin-bottom:6px;color:var(--marinho)}
+label.campo > small{display:block;color:var(--fraco);font-size:.8rem;margin:-4px 0 6px;font-style:italic}
+input[type=text],input[type=password],textarea,select{width:100%;border:1px solid var(--linha);border-radius:9px;
+  padding:12px;background:#fff;font-size:16px;line-height:1.5;min-height:46px}
+textarea{min-height:92px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--medio);outline-offset:1px;border-color:var(--medio)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;
+  padding:13px 16px;font-weight:600;font-size:.95rem;background:var(--azul);color:#fff;width:100%;min-height:48px}
+.btn:active{background:var(--marinho)}
+.btn:disabled{opacity:.5}
+.btn.sec{background:#fff;color:var(--azul);border:1px solid var(--suave)}
+.btn.perigo{background:#fff;color:var(--perigo);border:1px solid #E0B4B4}
+.btn.mini{width:auto;padding:10px 13px;font-size:.85rem;min-height:44px}
+.linha-btn{display:flex;gap:9px;margin-bottom:12px}
+.linha-btn .btn{width:auto;flex:1}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.chip{border:1px solid var(--linha);background:#fff;border-radius:999px;padding:11px 15px;font-size:.88rem;
+  color:var(--texto);min-height:44px;display:inline-flex;align-items:center}
+.chip[aria-pressed=true]{background:var(--marinho);border-color:var(--marinho);color:#fff}
+
+.escala{margin-bottom:16px}
+.escala .rot{font-size:.92rem;margin-bottom:7px;display:flex;justify-content:space-between;gap:10px}
+.escala .rot em{font-style:normal;color:var(--medio);font-weight:700;font-variant-numeric:tabular-nums}
+.escala .btns{display:flex;gap:6px}
+.escala .btns button{flex:1;border:1px solid var(--linha);background:#fff;border-radius:8px;padding:12px 0;
+  min-height:44px;font-weight:600;color:var(--fraco)}
+.escala .btns button[aria-pressed=true]{background:var(--medio);border-color:var(--medio);color:#fff}
+
+.reg{background:#fff;border:1px solid var(--linha);border-radius:12px;padding:14px;margin-bottom:11px}
+.reg .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
+.reg .top b{font-size:.98rem;color:var(--marinho);font-family:var(--serif)}
+.reg dl{margin:0;font-size:.9rem}
+.reg dt{color:var(--medio);font-weight:600;font-size:.76rem;margin-top:7px}
+.reg dd{margin:1px 0 0}
+.reg .acoes{display:flex;gap:7px;flex:0 0 auto}
+.icone{border:1px solid var(--linha);background:#fff;border-radius:8px;width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.vazio{text-align:center;padding:26px 16px;color:var(--fraco);border:1px dashed var(--suave);
+  border-radius:12px;background:#fff;margin-bottom:12px;font-size:.92rem}
+
+details.exemplo{background:var(--areia);border:1px solid var(--areiaB);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+details.exemplo summary{font-weight:600;color:var(--alerta);font-size:.92rem;cursor:pointer;min-height:32px}
+details.exemplo dl{font-size:.88rem;margin:10px 0 0}
+details.exemplo dt{font-weight:600;color:var(--alerta);font-size:.76rem;margin-top:7px}
+details.exemplo dd{margin:1px 0 0}
+
+nav.barra{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;background:#fff;
+  border-top:1px solid var(--linha);padding-bottom:env(safe-area-inset-bottom)}
+nav.barra button{flex:1;border:0;background:none;padding:10px 2px 9px;color:var(--fraco);min-height:56px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.68rem}
+nav.barra button svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav.barra button[aria-current=page]{color:var(--azul);font-weight:700}
+
+.aviso-salvo{position:fixed;left:50%;transform:translateX(-50%) translateY(14px);
+  bottom:calc(var(--barra) + 16px + env(safe-area-inset-bottom));background:var(--marinho);color:#fff;
+  padding:10px 18px;border-radius:999px;font-size:.84rem;opacity:0;pointer-events:none;
+  transition:opacity .18s,transform .18s;z-index:60;max-width:88vw;text-align:center}
+.aviso-salvo.ver{opacity:1;transform:translateX(-50%) translateY(0)}
+.secao-tit{font-size:1.28rem;margin:2px 0 6px}
+.secao-int{color:var(--fraco);font-size:.93rem;margin:0 0 16px}
+hr.div{border:0;border-top:1px solid var(--linha);margin:22px 0}
+.barra-prog{height:6px;background:var(--palido);border-radius:99px;overflow:hidden;margin-top:9px}
+.barra-prog i{display:block;height:100%;background:var(--medio);border-radius:99px;transition:width .3s}
+.grupo-tit{font-family:var(--serif);font-size:1.05rem;color:var(--marinho);margin:20px 0 10px;
+  padding-bottom:6px;border-bottom:2px solid var(--palido)}
+.grupo-tit:first-child{margin-top:0}
+
+/* ---------- Portão de segurança ---------- */
+#portao{position:fixed;inset:0;z-index:100;background:var(--marinho);color:#fff;display:none;
+  flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;
+  padding:calc(env(safe-area-inset-top) + 36px) 22px calc(env(safe-area-inset-bottom) + 28px)}
+#portao.ver{display:flex}
+#portao .caixa{width:100%;max-width:380px;text-align:center}
+#portao h2{color:#fff;font-size:1.4rem;margin:18px 0 8px}
+#portao p{color:#BBD3EE;font-size:.9rem;margin:0 0 14px;line-height:1.55}
+#portao p.forte{color:#fff}
+#portao label{display:block;text-align:left;margin-bottom:12px}
+#portao label span{display:block;font-size:.85rem;color:#BBD3EE;margin-bottom:6px}
+#portao input{width:100%;padding:14px;border-radius:10px;border:0;font-size:16px;min-height:50px}
+#portao .btn{background:#fff;color:var(--marinho);margin-top:4px}
+#portao .btn.linha2{background:rgba(255,255,255,.14);color:#fff;margin-top:10px}
+#portao .erro{background:rgba(255,120,120,.18);border:1px solid rgba(255,150,150,.5);color:#FFD9D9;
+  border-radius:10px;padding:11px 13px;font-size:.87rem;margin-bottom:12px;text-align:left}
+#portao .nota{background:rgba(255,255,255,.09);border-radius:10px;padding:13px 15px;font-size:.83rem;
+  color:#CFE0F2;text-align:left;margin-top:16px;line-height:1.6}
+#portao .medidor{height:6px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;margin:-4px 0 6px}
+#portao .medidor i{display:block;height:100%;border-radius:99px;transition:width .25s,background .25s}
+#portao .forca{font-size:.78rem;color:#BBD3EE;text-align:left;margin:0 0 12px}
+
+.oculto{display:none!important}
+
+@media print{
+  header,nav.barra,.aviso-salvo,.linha-btn,.secao-int,.secao-tit,#portao{display:none!important}
+  body{background:#fff;padding:0;font-size:11pt}
+  main{max-width:none;padding:0}
+  #leitura-txt{border:0;padding:0;font-size:10.5pt;line-height:1.5}
+  @page{margin:2cm}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div id="portao"><div class="caixa" id="portao-conteudo"></div></div>
+
+<header id="cab" class="oculto">
+  <button class="hb voltar" id="btn-voltar" aria-label="Voltar">‹</button>
+  <div class="emb" id="emb-cab"></div>
+  <div class="tit">
+    <h1 id="cab-tit">Quarto Passo</h1>
+    <div class="sub" id="cab-sub">Inventário moral</div>
+  </div>
+  <button class="hb" id="btn-travar" aria-label="Bloquear agora" title="Bloquear agora">🔒</button>
+</header>
+
+<main id="tela" class="oculto"></main>
+<nav class="barra oculto" id="barra"></nav>
+<div class="aviso-salvo" id="toast"></div>
+
+<script>
+"use strict";
+
+/* =====================================================================
+   PARTE 1 — CRIPTOGRAFIA
+   Tudo é gravado cifrado com AES-GCM 256. A chave nunca é armazenada:
+   é derivada da senha a cada abertura (PBKDF2-SHA256, 600.000 iterações)
+   e vive apenas na memória, sendo descartada ao bloquear.
+   ===================================================================== */
+const ITERACOES = 600000;
+const CHAVE_COFRE  = "qp-cofre-v2";      // dados cifrados
+const CHAVE_TENTAT = "qp-tentativas";    // controle de força bruta (não sigiloso)
+const CHAVE_ANTIGA = "quarto-passo-v1";  // versão sem cifra, para migração
+
+const temCripto = () => !!(window.crypto && window.crypto.subtle && window.isSecureContext);
+
+const bytes  = n => crypto.getRandomValues(new Uint8Array(n));
+const paraB64 = u8 => btoa(String.fromCharCode.apply(null, Array.from(u8)));
+const deB64   = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+async function derivar(senha, salt, iters){
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(senha), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name:"PBKDF2", salt, iterations:iters, hash:"SHA-256" },
+    base, { name:"AES-GCM", length:256 }, false, ["encrypt","decrypt"]);
+}
+async function cifrar(chave, objeto){
+  const iv = bytes(12);
+  const dados = new TextEncoder().encode(JSON.stringify(objeto));
+  const ct = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, chave, dados);
+  return { iv:paraB64(iv), ct:paraB64(new Uint8Array(ct)) };
+}
+async function decifrar(chave, ivB64, ctB64){
+  // Se a senha estiver errada, a etiqueta de autenticação do AES-GCM falha
+  // e esta chamada lança exceção. É essa falha que valida a senha.
+  const claro = await crypto.subtle.decrypt(
+    { name:"AES-GCM", iv:deB64(ivB64) }, chave, deB64(ctB64));
+  return JSON.parse(new TextDecoder().decode(claro));
+}
+
+/* =====================================================================
+   PARTE 2 — DEPÓSITO (onde o texto cifrado é guardado)
+   ===================================================================== */
+const Deposito = (() => {
+  let modo = "memoria", ram = {};
+  async function iniciar(){
+    if (typeof window.storage !== "undefined" && window.storage){
+      try { await window.storage.get(CHAVE_COFRE); } catch(e){}
+      modo = "claude"; return modo;
+    }
+    try { localStorage.setItem("__t","1"); localStorage.removeItem("__t"); modo = "local"; }
+    catch(e){ modo = "memoria"; }
+    return modo;
+  }
+  async function ler(k){
+    try{
+      if (modo === "claude"){ const r = await window.storage.get(k); return r && r.value ? r.value : null; }
+      if (modo === "local")  return localStorage.getItem(k);
+      return ram[k] || null;
+    }catch(e){ return null; }
+  }
+  async function gravar(k, txt){
+    try{
+      if (modo === "claude"){ await window.storage.set(k, txt); return true; }
+      if (modo === "local"){ localStorage.setItem(k, txt); return true; }
+      ram[k] = txt; return true;
+    }catch(e){ return false; }
+  }
+  async function remover(k){
+    try{
+      if (modo === "claude"){ await window.storage.delete(k); return true; }
+      if (modo === "local"){ localStorage.removeItem(k); return true; }
+      delete ram[k]; return true;
+    }catch(e){ return false; }
+  }
+  return { iniciar, ler, gravar, remover, get modo(){ return modo; } };
+})();
+
+/* =====================================================================
+   PARTE 3 — COFRE
+   ===================================================================== */
+let chaveMestra = null;   // CryptoKey em memória; nula quando bloqueado
+let metaCofre   = null;   // { v, salt, iters, iv, ct }
+
+const Cofre = {
+  async carregarMeta(){
+    const t = await Deposito.ler(CHAVE_COFRE);
+    metaCofre = t ? JSON.parse(t) : null;
+    return metaCofre;
+  },
+  existe(){ return !!metaCofre; },
+
+  async criar(senha, estadoInicialObj){
+    const salt = bytes(16);
+    const chave = await derivar(senha, salt, ITERACOES);
+    const { iv, ct } = await cifrar(chave, estadoInicialObj);
+    metaCofre = { v:2, salt:paraB64(salt), iters:ITERACOES, iv, ct, criado:new Date().toISOString() };
+    await Deposito.gravar(CHAVE_COFRE, JSON.stringify(metaCofre));
+    chaveMestra = chave;
+    return true;
+  },
+
+  async abrir(senha){
+    const salt = deB64(metaCofre.salt);
+    const chave = await derivar(senha, salt, metaCofre.iters || ITERACOES);
+    const dados = await decifrar(chave, metaCofre.iv, metaCofre.ct); // lança se a senha estiver errada
+    chaveMestra = chave;
+    return dados;
+  },
+
+  async gravar(estado){
+    if (!chaveMestra) return false;
+    const { iv, ct } = await cifrar(chaveMestra, estado);
+    metaCofre.iv = iv; metaCofre.ct = ct; metaCofre.atualizado = new Date().toISOString();
+    return Deposito.gravar(CHAVE_COFRE, JSON.stringify(metaCofre));
+  },
+
+  async trocarSenha(nova, estado){
+    const salt = bytes(16);
+    const chave = await derivar(nova, salt, ITERACOES);
+    const { iv, ct } = await cifrar(chave, estado);
+    metaCofre = { v:2, salt:paraB64(salt), iters:ITERACOES, iv, ct,
+                  criado:metaCofre.criado, atualizado:new Date().toISOString() };
+    await Deposito.gravar(CHAVE_COFRE, JSON.stringify(metaCofre));
+    chaveMestra = chave;
+    return true;
+  },
+
+  async destruir(){
+    await Deposito.remover(CHAVE_COFRE);
+    await Deposito.remover(CHAVE_TENTAT);
+    await Deposito.remover(CHAVE_ANTIGA);
+    chaveMestra = null; metaCofre = null;
+  }
+};
+
+/* ---- Controle de tentativas (atraso progressivo) ---- */
+const Tentativas = {
+  async ler(){
+    const t = await Deposito.ler(CHAVE_TENTAT);
+    return t ? JSON.parse(t) : { n:0, ate:0 };
+  },
+  async errou(){
+    const t = await this.ler(); t.n++;
+    // Duas tentativas livres (erro de digitação acontece).
+    // Da terceira em diante a espera cresce: 5s, 15s, 45s, 2min, 5min (teto).
+    const escala = [0,0,0,5,15,45,120,300];
+    const seg = escala[Math.min(t.n, escala.length - 1)];
+    t.ate = seg ? Date.now() + seg*1000 : 0;
+    await Deposito.gravar(CHAVE_TENTAT, JSON.stringify(t));
+    return t;
+  },
+  async zerar(){ await Deposito.gravar(CHAVE_TENTAT, JSON.stringify({ n:0, ate:0 })); }
+};
+
+/* =====================================================================
+   PARTE 4 — ESTADO DO INVENTÁRIO
+   ===================================================================== */
+function estadoInicial(){
+  return { versao:2, criadoEm:new Date().toISOString(), ultima:"ressentimentos", travaMin:2,
+    ressentimentos:[], medos:[], medosMarcados:[], medosTexto:{},
+    conduta:[], danos:[], linhaVida:{}, areas:{},
+    defeitos:[], defeitosEpisodios:[], qualidades:[],
+    guardado:{ itens:[], texto:{} }, sintese:{}, checklist:[] };
+}
+let E = estadoInicial();
+let rota = { secao:"inicio", param:null };
+let destrancado = false;
+
+let pendente = null;
+function salvar(silencioso){
+  if (!destrancado) return;
+  clearTimeout(pendente);
+  pendente = setTimeout(async () => {
+    const ok = await Cofre.gravar(E);
+    if (!silencioso) toast(ok ? "Salvo" : "Não foi possível salvar");
+  }, 400);
+}
+async function salvarJa(){
+  clearTimeout(pendente);
+  if (destrancado) await Cofre.gravar(E);
+}
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("ver");
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("ver"), 1800);
+}
+
+/* =====================================================================
+   PARTE 5 — BLOQUEIO
+   ===================================================================== */
+let ocioso = null, saiuEm = 0;
+
+function reiniciarOcioso(){
+  clearTimeout(ocioso);
+  if (!destrancado) return;
+  const min = E.travaMin == null ? 2 : E.travaMin;
+  if (min === 0) return;                       // 0 = só bloqueia ao sair
+  ocioso = setTimeout(() => bloquear("Bloqueado por inatividade."), min * 60000);
+}
+
+async function bloquear(motivo){
+  await salvarJa();
+  chaveMestra = null;            // descarta a chave
+  E = estadoInicial();           // limpa o texto claro da memória
+  destrancado = false;
+  clearTimeout(ocioso);
+  document.getElementById("tela").innerHTML = "";
+  ["cab","tela","barra"].forEach(i => document.getElementById(i).classList.add("oculto"));
+  telaDestrancar(motivo);
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (!destrancado) return;
+  if (document.visibilityState === "hidden"){ saiuEm = Date.now(); salvarJa(); }
+  else {
+    const min = E.travaMin == null ? 2 : E.travaMin;
+    const limite = min === 0 ? 0 : min * 60000;
+    if (Date.now() - saiuEm >= limite) bloquear("O app foi bloqueado enquanto estava em segundo plano.");
+    else reiniciarOcioso();
+  }
+});
+["pointerdown","keydown","input"].forEach(ev =>
+  document.addEventListener(ev, reiniciarOcioso, { passive:true }));
+window.addEventListener("pagehide", () => { if (destrancado) salvarJa(); });
+
+/* =====================================================================
+   PARTE 6 — CONTEÚDO (espelha o guia pessoal)
+   ===================================================================== */
+const AREAS = ["Pais e irmãos","Cônjuge ou companheiro(a)","Filhos","Vida profissional",
+  "Situação financeira","Saúde física","Equilíbrio emocional","Amizades e convívio",
+  "Vida espiritual","Minha participação em A.A.","Relação comigo mesmo"];
+
+const LISTA_MEDOS = ["Ficar sozinho","Ser abandonado","Ser rejeitado","Faltar dinheiro",
+  "Perder o emprego","Não ter valor","O que falam de mim","Fracassar","Ter sucesso",
+  "Intimidade","Compromisso","Autoridade","Ser descoberto","Adoecer","Morrer","Envelhecer",
+  "Perder o controle","Voltar a beber","Minha própria raiva","Decepcionar","Ser esquecido",
+  "Confiar","O futuro","Ficar sóbrio"];
+
+const LISTA_DEFEITOS = ["Egoísmo","Orgulho","Desonestidade","Ressentimento","Medo","Inveja",
+  "Intolerância","Preguiça","Autopiedade","Impaciência","Controle","Vaidade","Grosseria","Fofoca","Teimosia"];
+
+const LISTA_QUALIDADES = ["Honestidade","Coragem","Lealdade","Generosidade","Paciência","Humildade",
+  "Disciplina","Compaixão","Bom humor","Sei escutar","Perseverança","Criatividade","Responsabilidade",
+  "Gratidão","Prudência","Sei perdoar","Serenidade","Discrição","Dedicação ao trabalho",
+  "Espírito de serviço","Sensibilidade"];
+
+const ATINGE = ["Autoestima","Orgulho","Segurança material","Segurança emocional",
+  "Ambições pessoais","Relações pessoais","Relações afetivas","Pertencimento"];
+
+const LINHA_VIDA = [
+  { g:"Infância", qs:[
+    ["inf1","Como era sua família quando você nasceu?","Quantos moravam na casa, situação econômica, e que clima predominava."],
+    ["inf2","Que relação seus pais tinham entre si? E cada um com os próprios pais?"],
+    ["inf3","O que você acredita que sua família pensava de você?"],
+    ["inf4","Como se dava a correção em casa? Como você reagia?"],
+    ["inf5","Houve separações, doenças graves ou ausências longas? Você se sentiu responsável?"],
+    ["inf6","Percorra cada ano escolar. Que ressentimentos, vergonhas ou exclusões você guarda?"],
+    ["inf7","Você tinha vergonha da sua aparência, das roupas, da casa ou dos seus pais?"],
+    ["inf8","Conte a primeira vez que tomou algo que não era seu. Como se sentiu?"],
+    ["inf9","Que medos habitavam sua infância?"],
+    ["inf10","Que medo, culpa e ressentimento a criança que você era carregava?","Os sentimentos daquela época, não os de hoje."]
+  ]},
+  { g:"Adolescência", qs:[
+    ["ado1","Que tipo de amigo você era?"],
+    ["ado2","Você se ressentia por não pertencer, não ser líder, não ser notado?"],
+    ["ado3","Como você obtinha a atenção da família?","Bom comportamento, escândalo, isolamento, doença, notas."],
+    ["ado4","Que tipo de mentira você contava? O que sentia ao ser descoberto?"],
+    ["ado5","Seu desenvolvimento foi antes, depois ou junto com o dos colegas?"],
+    ["ado6","Que sentimentos você tinha sobre dinheiro nessa fase?"],
+    ["ado7","Como começou sua vida afetiva? Que sentimentos predominaram?","Registre o que sentiu, não os detalhes."],
+    ["ado8","Quando e como o álcool entrou na sua vida? O que ele resolveu?"],
+    ["ado9","Seus pais o comparavam a outros? Você guardou rancor por isso?"],
+    ["ado10","Que decisão sobre si mesmo você tomou nessa época e ainda sustenta?"]
+  ]},
+  { g:"Vida adulta", qs:[
+    ["adu1","Por que você se casou, ou por que não se casou?"],
+    ["adu2","Que pai ou mãe você foi enquanto bebia? E qual está sendo agora?"],
+    ["adu3","Você repete com seus filhos o que seus pais fizeram com você?"],
+    ["adu4","Nas separações de que participou, qual foi a sua parte?"],
+    ["adu5","Que ressentimentos você tem de chefes, sócios e colegas?"],
+    ["adu6","Você foi honesto no trabalho?","Tempo tomado, recursos usados, informações omitidas."],
+    ["adu7","Como você lida com dinheiro?"],
+    ["adu8","Você usa a doença para evitar responsabilidade ou obter atenção?"],
+    ["adu9","Você fala mal dos outros ou diminui alguém para se elevar?"],
+    ["adu10","Você precisa ter razão? Irrita-se com quem não pensa como você?"],
+    ["adu11","Como você comunica hoje que está mal?","Silêncio, grosseria, excesso de gentileza, isolamento, adoecer."],
+    ["adu12","Qual é sua relação atual com seu Poder Superior?"],
+    ["adu13","Você guarda ressentimento de algum membro do grupo?"],
+    ["adu14","Você ainda se sente diferente dos demais membros?"]
+  ]}
+];
+
+const GUARDADO_ITENS = [
+  ["gu1","O que eu jurei levar para o túmulo","Uma palavra por assunto já basta."],
+  ["gu2","A coisa de que eu mais tenho vergonha","Vergonha é diferente de culpa."],
+  ["gu3","O que eu temo que faria as pessoas se afastarem de mim"],
+  ["gu4","A mentira que eu mais conto sobre mim mesmo"]
+];
+
+const SINTESE_EIXOS = [
+  ["s1","Meus defeitos","Os três ou quatro que realmente governam minha conduta."],
+  ["s2","Minhas mágoas","Contra quem, por quê — e qual foi a minha parte."],
+  ["s3","Minhas qualidades","As forças sobre as quais a recuperação pode ser construída."],
+  ["s4","Minhas oportunidades","O que a sobriedade tornou possível."],
+  ["s5","Minha gratidão","Por quem e por que sou grato hoje."],
+  ["s6","Minhas inseguranças","As crenças sobre mim que ainda me limitam."]
+];
+
+const CHECKLIST = [
+  "Examinei meus ressentimentos, inclusive os justificados",
+  "Preenchi a quarta coluna em todos eles",
+  "Relacionei meus medos, dos maiores aos menores",
+  "Examinei minha conduta afetiva sem meias-palavras",
+  "Relacionei as pessoas que prejudiquei",
+  "Percorri infância, adolescência e vida adulta",
+  "Examinei as áreas da minha vida",
+  "Fui franco quanto à minha vida em A.A.",
+  "Relacionei defeitos com episódios concretos",
+  "Relacionei também minhas qualidades",
+  "Registrei o que jurei nunca contar",
+  "Escrevi a síntese dos seis eixos",
+  "Escolhi a quem farei o Quinto Passo",
+  "Marquei dia, hora e local"
+];
+
+const PARTES = [
+  { id:"ressentimentos", n:1,  nome:"Ressentimentos",        desc:"O ofensor número um" },
+  { id:"medos",          n:2,  nome:"Medos",                 desc:"O que está por baixo das mágoas" },
+  { id:"conduta",        n:3,  nome:"Conduta afetiva",       desc:"Onde fui egoísta ou desonesto" },
+  { id:"danos",          n:4,  nome:"Danos causados",        desc:"Servirá ao Oitavo Passo" },
+  { id:"linhavida",      n:5,  nome:"Linha da vida",         desc:"Infância, adolescência e vida adulta" },
+  { id:"areas",          n:6,  nome:"Áreas da vida",         desc:"Onde concentrar o esforço" },
+  { id:"caracter",       n:7,  nome:"Defeitos e qualidades", desc:"O balanço completo" },
+  { id:"guardado",       n:8,  nome:"O que nunca contei",    desc:"Os segredos que sustentam a doença" },
+  { id:"sintese",        n:9,  nome:"Síntese",               desc:"Seis eixos para o Quinto Passo" },
+  { id:"quintopasso",    n:10, nome:"Quinto Passo",          desc:"Verificação final" }
+];
+
+/* =====================================================================
+   PARTE 7 — PROGRESSO
+   ===================================================================== */
+function progresso(id){
+  const pc = (f,a) => Math.max(0, Math.min(100, Math.round(100*f/a)));
+  switch(id){
+    case "ressentimentos": {
+      const l = E.ressentimentos; if(!l.length) return 0;
+      const c = l.filter(r => (r.parte||"").trim()).length;
+      return pc(Math.min(l.length,5)/5*50 + c/l.length*50, 100);
+    }
+    case "medos": {
+      const a = E.medosMarcados.length ? 40 : 0;
+      const c = ["m1","m2","m3","m4"].filter(k => (E.medosTexto[k]||"").trim()).length;
+      return pc(a + c/4*40 + (E.medos.length?20:0), 100);
+    }
+    case "conduta": return pc(Math.min(E.conduta.length,4),4);
+    case "danos":   return pc(Math.min(E.danos.length,5),5);
+    case "linhavida": {
+      const t = LINHA_VIDA.reduce((s,g)=>s+g.qs.length,0);
+      return pc(Object.keys(E.linhaVida).filter(k=>(E.linhaVida[k]||"").trim()).length, t);
+    }
+    case "areas": return pc(Object.keys(E.areas).length, AREAS.length);
+    case "caracter": {
+      const d = E.defeitos.length?34:0, q = E.qualidades.length?33:0;
+      return pc(d+q+Math.min(E.defeitosEpisodios.length,3)/3*33, 100);
+    }
+    case "guardado": return pc(Object.keys(E.guardado.texto).filter(k=>(E.guardado.texto[k]||"").trim()).length, GUARDADO_ITENS.length);
+    case "sintese":  return pc(Object.keys(E.sintese).filter(k=>(E.sintese[k]||"").trim()).length, SINTESE_EIXOS.length);
+    case "quintopasso": return pc(E.checklist.length, CHECKLIST.length);
+  }
+  return 0;
+}
+const progressoGeral = () => Math.round(PARTES.reduce((s,p)=>s+progresso(p.id),0)/PARTES.length);
+
+/* =====================================================================
+   PARTE 8 — AJUDANTES DE INTERFACE
+   ===================================================================== */
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nl  = s => esc(s).replace(/\n/g,"<br>");
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+
+function emblema(px, cor){
+  cor = cor || "#0F2E5C";
+  return `<svg viewBox="0 0 100 100" width="${px}" height="${px}" role="img" aria-label="Emblema A.A.">
+    <circle cx="50" cy="50" r="45" fill="none" stroke="${cor}" stroke-width="6"/>
+    <circle cx="50" cy="50" r="35" fill="none" stroke="${cor}" stroke-width="2.4"/>
+    <text x="50" y="50" text-anchor="middle" dominant-baseline="central"
+      font-family="Georgia,serif" font-weight="700" font-size="31" fill="${cor}">A.A.</text></svg>`;
+}
+const campoTexto = (rot,val,dica,acao,lin) =>
+  `<label class="campo"><span>${esc(rot)}</span>${dica?`<small>${esc(dica)}</small>`:""}
+   <textarea rows="${lin||3}" data-acao="${acao}">${esc(val||"")}</textarea></label>`;
+const chips = (lista,marc,acao) =>
+  `<div class="chips">` + lista.map(v =>
+   `<button class="chip" type="button" aria-pressed="${marc.includes(v)}" data-acao="${acao}" data-valor="${esc(v)}">${esc(v)}</button>`).join("") + `</div>`;
+const escala = (rot,val,acao) =>
+  `<div class="escala"><div class="rot"><span>${esc(rot)}</span><em>${val==null?"—":val}</em></div>
+   <div class="btns">${[0,1,2,3,4,5].map(n=>`<button type="button" aria-pressed="${val===n}" data-acao="${acao}" data-valor="${n}">${n}</button>`).join("")}</div></div>`;
+const vazio = m => `<div class="vazio">${esc(m)}</div>`;
+
+/* =====================================================================
+   PARTE 9 — TELAS DO PORTÃO
+   ===================================================================== */
+function forcaSenha(s){
+  if(!s) return { n:0, rot:"", cor:"#888" };
+  let p = 0;
+  p += Math.min(s.length, 24) * 2.6;
+  if(/[a-z]/.test(s)) p += 5;
+  if(/[A-Z]/.test(s)) p += 6;
+  if(/[0-9]/.test(s)) p += 6;
+  if(/[^A-Za-z0-9]/.test(s)) p += 9;
+  if(s.trim().split(/\s+/).length >= 3) p += 14;         // frases longas valem muito
+  if(/^[0-9]+$/.test(s)) p -= 22;                        // só números é fraco
+  if(/(.)\1{2,}/.test(s)) p -= 10;
+  p = Math.max(0, Math.min(100, Math.round(p)));
+  const r = p<35 ? ["Fraca","#E08A8A"] : p<60 ? ["Razoável","#E0C07A"] : p<80 ? ["Boa","#9FD3A8"] : ["Muito boa","#7BC98A"];
+  return { n:p, rot:r[0], cor:r[1] };
+}
+
+function portao(html){
+  document.getElementById("portao-conteudo").innerHTML = html;
+  document.getElementById("portao").classList.add("ver");
+}
+
+function telaSemCripto(){
+  portao(`${emblema(74,"#FFFFFF")}
+    <h2>Este endereço não é seguro</h2>
+    <p class="forte">O app não pode proteger seu inventário aqui, então ele não vai abrir.</p>
+    <div class="nota">A criptografia do navegador só funciona em endereços <b>https://</b> ou em <b>localhost</b>.
+    Abrir o arquivo direto do celular (<b>file://</b>) não serve.<br><br>
+    Publique os arquivos no GitHub Pages e abra pelo endereço <b>https://</b> que ele gerar.</div>`);
+}
+
+function telaCriar(erro){
+  portao(`${emblema(74,"#FFFFFF")}
+    <h2>Criar sua senha</h2>
+    <p>Seu inventário será gravado cifrado neste aparelho. Só esta senha o abre.</p>
+    ${erro ? `<div class="erro">${esc(erro)}</div>` : ""}
+    <label><span>Senha</span><input type="password" id="s1" autocomplete="new-password" autocapitalize="off" spellcheck="false"></label>
+    <div class="medidor"><i id="medidor" style="width:0%"></i></div>
+    <p class="forca" id="forca">Use uma frase de três ou mais palavras. É mais fácil de lembrar e muito mais difícil de quebrar.</p>
+    <label><span>Repita a senha</span><input type="password" id="s2" autocomplete="new-password" autocapitalize="off" spellcheck="false"></label>
+    <button class="btn" data-acao="criar-cofre">Criar e abrir</button>
+    <div class="nota"><b>Não há recuperação.</b> Ninguém — nem eu, nem o seu aparelho — consegue abrir seu inventário sem esta senha.
+    Se esquecê-la, o conteúdo estará perdido para sempre.<br><br>Anote-a em papel e guarde longe do celular.</div>`);
+  const s1 = document.getElementById("s1");
+  s1.addEventListener("input", () => {
+    const f = forcaSenha(s1.value);
+    const m = document.getElementById("medidor");
+    m.style.width = f.n + "%"; m.style.background = f.cor;
+    document.getElementById("forca").textContent = f.rot ? "Força: " + f.rot : "";
+  });
+  s1.focus();
+}
+
+async function telaDestrancar(motivo){
+  const t = await Tentativas.ler();
+  const espera = Math.max(0, Math.ceil((t.ate - Date.now())/1000));
+  portao(`${emblema(74,"#FFFFFF")}
+    <h2>Seu inventário está trancado</h2>
+    ${motivo ? `<p>${esc(motivo)}</p>` : `<p>Digite sua senha para abrir.</p>`}
+    ${espera ? `<div class="erro" id="espera">Muitas tentativas. Aguarde <b id="cont">${espera}</b> segundos.</div>` : ""}
+    ${t.n && !espera ? `<div class="erro">${t.n} tentativa${t.n>1?"s":""} sem sucesso até agora.</div>` : ""}
+    <label><span>Senha</span><input type="password" id="sen" autocomplete="current-password" autocapitalize="off" spellcheck="false" ${espera?"disabled":""}></label>
+    <button class="btn" data-acao="abrir-cofre" id="btn-abrir" ${espera?"disabled":""}>Abrir</button>
+    <button class="btn linha2" data-acao="esqueci">Esqueci minha senha</button>`);
+  if (espera){
+    let n = espera;
+    const iv = setInterval(() => {
+      n--;
+      const c = document.getElementById("cont");
+      if(!c){ clearInterval(iv); return; }
+      if(n <= 0){ clearInterval(iv); telaDestrancar(motivo); } else c.textContent = n;
+    }, 1000);
+  } else {
+    const s = document.getElementById("sen");
+    s.focus();
+    s.addEventListener("keydown", e => { if(e.key === "Enter") abrirCofre(); });
+  }
+}
+
+function telaMigrar(){
+  portao(`${emblema(74,"#FFFFFF")}
+    <h2>Proteger o que já existe</h2>
+    <p>Encontrei um inventário gravado sem proteção, da versão anterior deste app.</p>
+    <p class="forte">Crie uma senha agora: o conteúdo será cifrado e a cópia desprotegida, apagada.</p>
+    <label><span>Senha</span><input type="password" id="s1" autocomplete="new-password" autocapitalize="off" spellcheck="false"></label>
+    <div class="medidor"><i id="medidor" style="width:0%"></i></div>
+    <p class="forca" id="forca">Use uma frase de três ou mais palavras.</p>
+    <label><span>Repita a senha</span><input type="password" id="s2" autocomplete="new-password" autocapitalize="off" spellcheck="false"></label>
+    <button class="btn" data-acao="migrar">Cifrar meu inventário</button>
+    <div class="nota"><b>Não há recuperação.</b> Anote a senha em papel antes de continuar.</div>`);
+  const s1 = document.getElementById("s1");
+  s1.addEventListener("input", () => {
+    const f = forcaSenha(s1.value);
+    const m = document.getElementById("medidor");
+    m.style.width = f.n + "%"; m.style.background = f.cor;
+    document.getElementById("forca").textContent = f.rot ? "Força: " + f.rot : "";
+  });
+  s1.focus();
+}
+
+/* =====================================================================
+   PARTE 10 — TELAS DO APP
+   ===================================================================== */
+const Telas = {};
+
+Telas.inicio = () => {
+  const g = progressoGeral(), c = 2*Math.PI*52;
+  return `
+  <div class="resumo"><div class="rot">Meu inventário</div>
+    <div class="anel"><svg width="118" height="118" viewBox="0 0 118 118">
+      <circle cx="59" cy="59" r="52" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="9"/>
+      <circle cx="59" cy="59" r="52" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"
+        stroke-dasharray="${c}" stroke-dashoffset="${c*(1-g/100)}"/></svg><span>${g}%</span></div>
+    <div class="nota">${g===0?"Comece pela parte que quiser.":g===100?"Tudo preenchido. Marque seu Quinto Passo.":"Continue no seu ritmo."}</div>
+  </div>
+  <div class="passo-frase"><q>Fizemos minucioso e destemido inventário moral de nós mesmos.</q>
+    <span class="fonte">Quarto Passo de Alcoólicos Anônimos</span></div>
+  ${PARTES.map(p => { const pr = progresso(p.id);
+    return `<button class="parte ${pr===100?"feita":""}" data-acao="ir" data-valor="${p.id}">
+      <span class="n">${pr===100?"✓":p.n}</span>
+      <span class="txt"><b>${esc(p.nome)}</b><small>${esc(p.desc)}</small>
+      <span class="barra-prog"><i style="width:${pr}%"></i></span></span>
+      <span class="med">${pr}%</span></button>`; }).join("")}
+  <div class="cartao aviso" style="margin-top:16px"><h3>Se apertar</h3>
+    <p>Se durante o trabalho surgir sofrimento intenso, angústia que não passa ou vontade de beber, pare e procure ajuda no mesmo dia: seu padrinho, seu grupo, ou a Linha de Ajuda de A.A. em aa.org.br.</p>
+    <p>Não existe prêmio por atravessar isso sozinho.</p></div>`;
+};
+
+Telas.ressentimentos = () => `
+  <h2 class="secao-tit">Ressentimentos</h2>
+  <p class="secao-int">Mágoa guardada é a que mais devolve alcoólicos ao copo. Registre todas — sobretudo as que parecem justas.</p>
+  <details class="exemplo"><summary>Ver um exemplo preenchido</summary><dl>
+    <dt>De quem me ressinto</dt><dd>Meu antigo patrão</dd>
+    <dt>O que aconteceu</dt><dd>Me mandou embora sem conversar</dd>
+    <dt>O que isso atingiu</dt><dd>Orgulho, segurança material</dd>
+    <dt>Minha parte</dt><dd>Eu faltava direto, bebia no serviço e menti que estava doente</dd></dl></details>
+  <div class="cartao aviso"><h3>Sobre a quarta coluna</h3>
+    <p>É nela que o Passo acontece. Mas há casos — violência sofrida na infância, abusos, crimes contra você — em que não houve parte sua alguma. Nesses, escreva com todas as letras que não havia responsabilidade sua.</p></div>
+  <button class="btn" data-acao="novo-res">Adicionar ressentimento</button><hr class="div">
+  ${E.ressentimentos.length ? E.ressentimentos.map(r => `
+    <div class="reg"><div class="top"><b>${esc(r.quem||"Sem nome")}</b><span class="acoes">
+      <button class="icone" data-acao="edit-res" data-valor="${r.id}" aria-label="Editar">✎</button>
+      <button class="icone" data-acao="del-res" data-valor="${r.id}" aria-label="Excluir">✕</button></span></div>
+      <dl>${r.oque?`<dt>O que aconteceu</dt><dd>${nl(r.oque)}</dd>`:""}
+      ${(r.atinge||[]).length?`<dt>O que atingiu</dt><dd>${esc(r.atinge.join(", "))}</dd>`:""}
+      ${r.parte?`<dt>Minha parte</dt><dd>${nl(r.parte)}</dd>`:`<dt>Minha parte</dt><dd style="color:var(--perigo)">Ainda em branco</dd>`}</dl></div>`).join("")
+    : vazio("Nenhum ressentimento registrado. Comece pelos nomes que vierem à cabeça, sem filtrar.")}`;
+
+Telas.editarRes = () => {
+  const r = E.ressentimentos.find(x=>x.id===rota.param) || {};
+  return `<h2 class="secao-tit">${r.quem?"Editar":"Novo ressentimento"}</h2>
+  <label class="campo"><span>1. De quem me ressinto</span>
+    <small>Pessoa, instituição, ou uma situação como a doença ou a pobreza.</small>
+    <input type="text" data-acao="res-quem" value="${esc(r.quem||"")}"></label>
+  ${campoTexto("2. O que aconteceu", r.oque, "O que essa pessoa fez ou deixou de fazer.", "res-oque")}
+  <label class="campo"><span>3. O que isso atingiu em mim</span></label>
+  ${chips(ATINGE, r.atinge||[], "res-atinge")}<hr class="div">
+  ${campoTexto("4. Minha parte", r.parte, "Onde fui egoísta, desonesto, autocentrado ou temeroso? Se não houve parte sua, registre isso.", "res-parte", 4)}
+  <div class="linha-btn"><button class="btn sec" data-acao="ir" data-valor="ressentimentos">Concluir</button></div>`;
+};
+
+Telas.medos = () => `
+  <h2 class="secao-tit">Medos</h2>
+  <p class="secao-int">Sob quase todo ressentimento existe um medo. O problema não é ter medo — é o medo que governa sem ser examinado.</p>
+  <div class="grupo-tit">Marque os que reconhece em você</div>
+  ${chips(LISTA_MEDOS, E.medosMarcados, "medo-chip")}
+  <div class="grupo-tit">Complete</div>
+  ${campoTexto("O maior medo da minha vida é…", E.medosTexto.m1, null, "medo-m1")}
+  ${campoTexto("Esse medo começou quando…", E.medosTexto.m2, null, "medo-m2")}
+  ${campoTexto("Por causa dele eu deixo de…", E.medosTexto.m3, null, "medo-m3")}
+  ${campoTexto("Se eu não tivesse esse medo, eu…", E.medosTexto.m4, null, "medo-m4")}
+  <div class="grupo-tit">Medos detalhados</div>
+  <button class="btn" data-acao="novo-medo">Adicionar medo detalhado</button><div style="height:12px"></div>
+  ${E.medos.length ? E.medos.map(m => `
+    <div class="reg"><div class="top"><b>${esc(m.nome||"Sem nome")}</b><span class="acoes">
+      <button class="icone" data-acao="edit-medo" data-valor="${m.id}" aria-label="Editar">✎</button>
+      <button class="icone" data-acao="del-medo" data-valor="${m.id}" aria-label="Excluir">✕</button></span></div>
+      <dl>${m.origem?`<dt>De onde veio</dt><dd>${nl(m.origem)}</dd>`:""}
+      ${m.efeito?`<dt>O que me faz fazer</dt><dd>${nl(m.efeito)}</dd>`:""}
+      ${m.peso!=null?`<dt>Peso hoje</dt><dd>${m.peso} de 5</dd>`:""}</dl></div>`).join("")
+    : vazio("Nenhum medo detalhado ainda.")}`;
+
+Telas.editarMedo = () => {
+  const m = E.medos.find(x=>x.id===rota.param) || {};
+  return `<h2 class="secao-tit">${m.nome?"Editar":"Novo medo"}</h2>
+  <label class="campo"><span>Qual é o medo</span><input type="text" data-acao="medo-nome" value="${esc(m.nome||"")}"></label>
+  ${campoTexto("De onde ele veio", m.origem, "Desde quando você o carrega?", "medo-origem")}
+  ${campoTexto("O que ele me faz fazer — ou deixar de fazer", m.efeito, null, "medo-efeito")}
+  ${escala("Quanto pesa hoje", m.peso, "medo-peso")}
+  <div class="linha-btn"><button class="btn sec" data-acao="ir" data-valor="medos">Concluir</button></div>`;
+};
+
+Telas.conduta = () => `
+  <h2 class="secao-tit">Conduta afetiva</h2>
+  <p class="secao-int">Aqui não se examinam preferências, orientação nem frequência. A pergunta é uma só, desdobrada em quatro: onde fui egoísta, onde fui desonesto, onde fui inconsiderado, e quem se feriu.</p>
+  <button class="btn" data-acao="novo-cond">Adicionar registro</button><hr class="div">
+  ${E.conduta.length ? E.conduta.map(c => `
+    <div class="reg"><div class="top"><b>${esc(c.quem||"Sem nome")}</b><span class="acoes">
+      <button class="icone" data-acao="edit-cond" data-valor="${c.id}" aria-label="Editar">✎</button>
+      <button class="icone" data-acao="del-cond" data-valor="${c.id}" aria-label="Excluir">✕</button></span></div>
+      <dl>${c.oque?`<dt>O que fiz ou deixei de fazer</dt><dd>${nl(c.oque)}</dd>`:""}
+      ${c.dano?`<dt>Dano causado</dt><dd>${nl(c.dano)}</dd>`:""}
+      ${c.raiz?`<dt>Onde estava o egoísmo, a desonestidade ou o medo</dt><dd>${nl(c.raiz)}</dd>`:""}</dl></div>`).join("")
+    : vazio("Nenhum registro ainda.")}`;
+
+Telas.editarCond = () => {
+  const c = E.conduta.find(x=>x.id===rota.param) || {};
+  return `<h2 class="secao-tit">${c.quem?"Editar":"Novo registro"}</h2>
+  <label class="campo"><span>Pessoa envolvida</span><input type="text" data-acao="cond-quem" value="${esc(c.quem||"")}"></label>
+  ${campoTexto("O que fiz ou deixei de fazer", c.oque, null, "cond-oque")}
+  ${campoTexto("Dano causado", c.dano, "A ela, a você, ou a terceiros.", "cond-dano")}
+  ${campoTexto("Onde estava o egoísmo, a desonestidade ou o medo", c.raiz, null, "cond-raiz")}
+  <div class="linha-btn"><button class="btn sec" data-acao="ir" data-valor="conduta">Concluir</button></div>`;
+};
+
+Telas.danos = () => `
+  <h2 class="secao-tit">Danos causados</h2>
+  <p class="secao-int">Esta lista alimentará o Oitavo Passo. Dano não é só dinheiro: também é a promessa quebrada, a ausência, e o exemplo dado a quem observava.</p>
+  <button class="btn" data-acao="novo-dano">Adicionar pessoa prejudicada</button><hr class="div">
+  ${E.danos.length ? E.danos.map(d => `
+    <div class="reg"><div class="top"><b>${esc(d.quem||"Sem nome")}</b><span class="acoes">
+      <button class="icone" data-acao="edit-dano" data-valor="${d.id}" aria-label="Editar">✎</button>
+      <button class="icone" data-acao="del-dano" data-valor="${d.id}" aria-label="Excluir">✕</button></span></div>
+      <dl>${d.oque?`<dt>O que eu fiz</dt><dd>${nl(d.oque)}</dd>`:""}
+      ${d.reparo?`<dt>Ainda é reparável?</dt><dd>${esc(d.reparo)}</dd>`:""}</dl></div>`).join("")
+    : vazio("Nenhuma pessoa registrada. Comece pelos mais próximos e vá se afastando em círculos.")}`;
+
+Telas.editarDano = () => {
+  const d = E.danos.find(x=>x.id===rota.param) || {};
+  return `<h2 class="secao-tit">${d.quem?"Editar":"Nova pessoa"}</h2>
+  <label class="campo"><span>Quem foi prejudicado</span><input type="text" data-acao="dano-quem" value="${esc(d.quem||"")}"></label>
+  ${campoTexto("O que eu fiz", d.oque, null, "dano-oque")}
+  <label class="campo"><span>Ainda é reparável?</span><select data-acao="dano-reparo">
+    ${["","Sim, integralmente","Em parte","Não — a pessoa faleceu ou não é localizável","Repará-lo causaria novo dano"]
+      .map(o=>`<option value="${esc(o)}" ${d.reparo===o?"selected":""}>${o||"Escolher…"}</option>`).join("")}
+  </select></label>
+  <div class="linha-btn"><button class="btn sec" data-acao="ir" data-valor="danos">Concluir</button></div>`;
+};
+
+Telas.linhavida = () => `
+  <h2 class="secao-tit">Linha da vida</h2>
+  <p class="secao-int">Percorrer a vida em ordem revela a origem dos padrões. Não é preciso responder a tudo.</p>
+  ${LINHA_VIDA.map(g => `<div class="grupo-tit">${esc(g.g)}</div>
+    ${g.qs.map(q => campoTexto(q[1], E.linhaVida[q[0]], q[2], "lv-"+q[0], 3)).join("")}`).join("")}`;
+
+Telas.areas = () => {
+  const n = Object.entries(E.areas);
+  const b = n.filter(([,v])=>v<=2).map(([k])=>AREAS[k]).filter(Boolean);
+  return `<h2 class="secao-tit">Áreas da vida</h2>
+  <p class="secao-int">Dê a cada área uma nota de 0 a 5. Zero é muito insatisfeito; cinco, plenamente satisfeito.</p>
+  ${AREAS.map((a,i)=>escala(a, E.areas[i], "area-"+i)).join("")}
+  ${n.length?`<div class="cartao"><h3>Leitura do resultado</h3>
+    ${b.length?`<p>As notas mais baixas indicam onde o inventário precisa ser mais minucioso: <b>${esc(b.join(", "))}</b>.</p>`
+              :`<p>Nenhuma área ficou em 2 ou menos.</p>`}
+    <p>As notas mais altas merecem igual atenção: nelas costumam estar suas qualidades, que também integram o inventário.</p></div>`:""}`;
+};
+
+Telas.caracter = () => `
+  <h2 class="secao-tit">Defeitos e qualidades</h2>
+  <p class="secao-int">Defeitos não são maldades: são instintos legítimos que se tornaram excessivos ou passaram a ser satisfeitos de um jeito que causa dano.</p>
+  <div class="grupo-tit">Meus defeitos</div>${chips(LISTA_DEFEITOS, E.defeitos, "def-chip")}
+  <div class="cartao aviso"><h3>Marcar não basta</h3>
+    <p>Dizer “sou orgulhoso” é fácil. O Passo pede o episódio: no dia tal, meu orgulho me fez brigar com fulano e ficamos dois anos sem nos falar.</p></div>
+  <button class="btn" data-acao="novo-epi">Adicionar episódio concreto</button><div style="height:12px"></div>
+  ${E.defeitosEpisodios.length ? E.defeitosEpisodios.map(e => `
+    <div class="reg"><div class="top"><b>${esc(e.defeito||"Sem defeito")}</b><span class="acoes">
+      <button class="icone" data-acao="edit-epi" data-valor="${e.id}" aria-label="Editar">✎</button>
+      <button class="icone" data-acao="del-epi" data-valor="${e.id}" aria-label="Excluir">✕</button></span></div>
+      <dl>${e.episodio?`<dt>O que aconteceu</dt><dd>${nl(e.episodio)}</dd>`:""}
+      ${e.quem?`<dt>Quem se machucou</dt><dd>${nl(e.quem)}</dd>`:""}
+      ${e.raiz?`<dt>O que eu temia ou queria</dt><dd>${nl(e.raiz)}</dd>`:""}</dl></div>`).join("")
+    : vazio("Nenhum episódio registrado.")}
+  <hr class="div"><div class="grupo-tit">Minhas qualidades</div>
+  <p class="secao-int">Reconhecer as próprias forças não é vaidade: é a outra metade do inventário.</p>
+  ${chips(LISTA_QUALIDADES, E.qualidades, "qual-chip")}
+  ${E.qualidades.length===0?`<div class="cartao aviso"><h3>Se não conseguiu marcar nenhuma</h3>
+    <p>Isso é comum e não é a verdade sobre você. Pergunte ao seu padrinho que qualidades ele enxerga em você, e anote — mesmo que ainda não concorde.</p></div>`:""}`;
+
+Telas.editarEpi = () => {
+  const e = E.defeitosEpisodios.find(x=>x.id===rota.param) || {};
+  const op = E.defeitos.length ? E.defeitos : LISTA_DEFEITOS;
+  return `<h2 class="secao-tit">${e.defeito?"Editar":"Novo episódio"}</h2>
+  <label class="campo"><span>Qual defeito</span><select data-acao="epi-defeito"><option value="">Escolher…</option>
+    ${op.map(o=>`<option value="${esc(o)}" ${e.defeito===o?"selected":""}>${esc(o)}</option>`).join("")}</select></label>
+  ${campoTexto("O episódio concreto", e.episodio, "Uma vez em que ele apareceu de verdade.", "epi-episodio")}
+  ${campoTexto("Quem se machucou", e.quem, null, "epi-quem")}
+  ${campoTexto("O que eu temia ou queria naquele momento", e.raiz, null, "epi-raiz")}
+  <div class="linha-btn"><button class="btn sec" data-acao="ir" data-valor="caracter">Concluir</button></div>`;
+};
+
+Telas.guardado = () => `
+  <h2 class="secao-tit">O que nunca contei</h2>
+  <p class="secao-int">Existe, em quase todo inventário, um punhado de fatos que a pessoa jurou não revelar a ninguém. São justamente os que mais pesam.</p>
+  <div class="cartao aviso"><h3>Você não precisa detalhar</h3>
+    <p>Muitos membros anotam só uma palavra que lhes permita recordar o assunto na hora do Quinto Passo.</p>
+    <p>Se houver algo que envolva risco à sua segurança ou à de terceiros, converse antes com seu padrinho sobre o encaminhamento.</p></div>
+  ${GUARDADO_ITENS.map(i => campoTexto(i[1], E.guardado.texto[i[0]], i[2], "gu-"+i[0], 3)).join("")}
+  <div class="cartao"><h3>Uma das Promessas</h3>
+    <p>O Livro Azul diz que não vamos nos arrepender do passado nem querer fechar a porta sobre ele — por mais fundo que tenhamos ido —, e que veremos de que modo nossa experiência pode beneficiar outra pessoa.</p>
+    <p style="font-size:.82rem;color:var(--fraco)">Explicado com outras palavras, a partir do capítulo “Mãos à Obra”.</p></div>`;
+
+Telas.sintese = () => `
+  <h2 class="secao-tit">Síntese</h2>
+  <p class="secao-int">Consolide o que aprendeu em seis eixos. Não recopie: sintetize. É este texto que você levará ao Quinto Passo.</p>
+  ${SINTESE_EIXOS.map(s => campoTexto(s[1], E.sintese[s[0]], s[2], "sin-"+s[0], 4)).join("")}`;
+
+Telas.quintopasso = () => `
+  <h2 class="secao-tit">Preparar o Quinto Passo</h2>
+  <div class="passo-frase"><q>É preciso falar com alguém a esse respeito.</q>
+    <span class="fonte">Os Doze Passos e as Doze Tradições, Quinto Passo</span></div>
+  <div class="grupo-tit">Verificação</div>
+  ${CHECKLIST.map((c,i)=>`<button class="chip" style="width:100%;text-align:left;border-radius:10px;margin-bottom:7px"
+    type="button" aria-pressed="${E.checklist.includes(i)}" data-acao="chk" data-valor="${i}">
+    ${E.checklist.includes(i)?"✓":"○"}&nbsp;&nbsp;${esc(c)}</button>`).join("")}
+  <div class="cartao aviso" style="margin-top:16px"><h3>A pergunta que decide</h3>
+    <p>Existe alguma coisa que você deixou de fora de propósito, com a intenção de não mencionar no Quinto Passo?</p>
+    <p>Se existe, é justamente a matéria mais importante do seu trabalho.</p></div>
+  <div class="grupo-tit">Levar para a leitura</div>
+  <p class="secao-int">Gere o texto com tudo o que registrou, para ler ao seu padrinho.</p>
+  <button class="btn" data-acao="gerar-leitura">Abrir meu inventário para leitura</button>`;
+
+Telas.leitura = () => `
+  <h2 class="secao-tit">Meu inventário</h2>
+  <div class="cartao risco"><h3>Esta tela mostra tudo em texto aberto</h3>
+    <p>Use-a apenas no momento da leitura, e volte quando terminar. Se copiar o texto, ele ficará na área de transferência do aparelho até você copiar outra coisa.</p></div>
+  <div class="linha-btn">
+    <button class="btn sec mini" data-acao="copiar">Copiar texto</button>
+    <button class="btn sec mini" data-acao="imprimir">Imprimir</button></div>
+  <div class="cartao" id="leitura-txt" style="white-space:pre-wrap;font-size:.92rem;line-height:1.65">${esc(montarTexto())}</div>`;
+
+Telas.ajustes = () => {
+  const rot = { claude:"no aplicativo do Claude", local:"neste navegador", memoria:"apenas na memória desta sessão" }[Deposito.modo];
+  const min = E.travaMin == null ? 2 : E.travaMin;
+  return `<h2 class="secao-tit">Ajustes</h2>
+
+  <div class="cartao"><h3>Como seu inventário é protegido</h3>
+    <p>O conteúdo é cifrado com <b>AES-GCM de 256 bits</b> antes de ser gravado ${esc(rot)}. A chave é derivada da sua senha por <b>PBKDF2-SHA256 com ${ITERACOES.toLocaleString("pt-BR")} iterações</b> e existe apenas na memória enquanto o app está aberto.</p>
+    <p>Sua senha não é gravada em lugar nenhum. Nada sai deste aparelho.</p></div>
+
+  <div class="cartao"><h3>Bloquear sozinho</h3>
+    <p>Depois de quanto tempo sem uso o app deve se trancar?</p>
+    <div class="chips">${[[0,"Ao sair"],[1,"1 min"],[2,"2 min"],[5,"5 min"],[15,"15 min"]]
+      .map(([v,r])=>`<button class="chip" type="button" aria-pressed="${min===v}" data-acao="trava-min" data-valor="${v}">${r}</button>`).join("")}</div>
+    <p style="font-size:.84rem;color:var(--fraco);margin-top:8px">Sair do app ou apagar a tela sempre tranca, no mínimo ao voltar depois desse tempo.</p></div>
+
+  <div class="cartao"><h3>Cópia de segurança</h3>
+    <p>A cópia sai <b>cifrada com a mesma senha</b>. Guarde-a onde quiser: sem a senha, o arquivo é ilegível.</p>
+    <div class="linha-btn">
+      <button class="btn sec mini" data-acao="exportar">Baixar cópia cifrada</button>
+      <button class="btn sec mini" data-acao="importar">Restaurar cópia</button></div>
+    <input type="file" id="arq" accept=".qp,application/json" hidden></div>
+
+  <div class="cartao risco"><h3>Cópia em texto aberto</h3>
+    <p>Gera um arquivo legível por qualquer pessoa, sem proteção alguma. Só use se for imprimir para o Quinto Passo, e destrua depois.</p>
+    <button class="btn perigo" data-acao="exportar-claro">Baixar sem proteção</button></div>
+
+  <div class="cartao"><h3>Trocar a senha</h3>
+    <p>O inventário é cifrado de novo com a senha nova. A antiga deixa de funcionar.</p>
+    <button class="btn sec" data-acao="trocar-senha">Trocar senha</button></div>
+
+  <div class="cartao risco"><h3>Apagar tudo</h3>
+    <p>Remove o inventário cifrado deste aparelho, sem possibilidade de desfazer. Muitos membros fazem isso depois do Quinto Passo.</p>
+    <button class="btn perigo" data-acao="apagar">Apagar meu inventário</button></div>
+
+  <div class="cartao aviso"><h3>O que a criptografia não cobre</h3>
+    <p>Ela protege o arquivo gravado. Não protege a tela: quem estiver olhando por cima do seu ombro, ou usar o aparelho com o app aberto, verá tudo. Por isso o bloqueio automático.</p>
+    <p>Capturas de tela e teclados que guardam histórico também escapam dessa proteção.</p></div>
+
+  <div class="cartao aviso"><h3>Sobre este material</h3>
+    <p>Aplicativo de uso pessoal, baseado no guia do Quarto Passo. Não é literatura aprovada pela Conferência de Serviços Gerais de A.A. e não substitui as obras oficiais da Irmandade.</p></div>`;
+};
+
+/* =====================================================================
+   PARTE 11 — TEXTO PARA LEITURA
+   ===================================================================== */
+function montarTexto(){
+  const L = [];
+  const tit = t => { L.push("", "═══ " + t.toUpperCase() + " ═══", ""); };
+  const par = (r,v) => { if(v && String(v).trim()) L.push(r + ": " + v); };
+  L.push("MEU QUARTO PASSO", "Inventário moral — " + new Date().toLocaleDateString("pt-BR"));
+
+  tit("1. Ressentimentos");
+  E.ressentimentos.length || L.push("(nada registrado)");
+  E.ressentimentos.forEach((r,i)=>{
+    L.push("— " + (i+1) + ". " + (r.quem||"sem nome"));
+    par("   O que aconteceu", r.oque);
+    par("   O que atingiu", (r.atinge||[]).join(", "));
+    if((r.parte||"").trim()) par("   Minha parte", r.parte);
+    else L.push("   Minha parte: [AINDA EM BRANCO — reveja antes do Quinto Passo]");
+    L.push("");
+  });
+
+  tit("2. Medos");
+  if(E.medosMarcados.length) L.push("Marcados: " + E.medosMarcados.join(", "), "");
+  [["O maior medo da minha vida","m1"],["Começou quando","m2"],
+   ["Por causa dele deixo de","m3"],["Sem ele eu","m4"]].forEach(([r,k])=>par(r, E.medosTexto[k]));
+  E.medos.forEach(m=>{ L.push("", "— " + (m.nome||"sem nome"));
+    par("   De onde veio", m.origem); par("   O que me faz fazer", m.efeito);
+    if(m.peso!=null) par("   Peso hoje", m.peso + " de 5"); });
+
+  tit("3. Conduta afetiva");
+  E.conduta.length || L.push("(nada registrado)");
+  E.conduta.forEach(c=>{ L.push("— " + (c.quem||"sem nome"));
+    par("   O que fiz", c.oque); par("   Dano", c.dano); par("   Raiz", c.raiz); L.push(""); });
+
+  tit("4. Danos causados");
+  E.danos.length || L.push("(nada registrado)");
+  E.danos.forEach(d=>{ L.push("— " + (d.quem||"sem nome"));
+    par("   O que fiz", d.oque); par("   Reparável", d.reparo); L.push(""); });
+
+  tit("5. Linha da vida");
+  LINHA_VIDA.forEach(g=>{
+    const r = g.qs.filter(q=>(E.linhaVida[q[0]]||"").trim());
+    if(!r.length) return;
+    L.push("· " + g.g, "");
+    r.forEach(q=>L.push(q[1], "  " + E.linhaVida[q[0]], ""));
+  });
+
+  tit("6. Áreas da vida");
+  AREAS.forEach((a,i)=>{ if(E.areas[i]!=null) L.push(a + ": " + E.areas[i] + " de 5"); });
+
+  tit("7. Defeitos e qualidades");
+  if(E.defeitos.length) L.push("Defeitos: " + E.defeitos.join(", "), "");
+  E.defeitosEpisodios.forEach(e=>{ L.push("— " + (e.defeito||"sem defeito"));
+    par("   Episódio", e.episodio); par("   Quem se machucou", e.quem);
+    par("   O que eu temia ou queria", e.raiz); L.push(""); });
+  if(E.qualidades.length) L.push("Qualidades: " + E.qualidades.join(", "));
+
+  tit("8. O que nunca contei");
+  GUARDADO_ITENS.forEach(i=>par(i[1], E.guardado.texto[i[0]]));
+
+  tit("9. Síntese");
+  SINTESE_EIXOS.forEach(s=>{ if((E.sintese[s[0]]||"").trim()) L.push(s[1] + ":", "  " + E.sintese[s[0]], ""); });
+
+  return L.join("\n");
+}
+
+/* =====================================================================
+   PARTE 12 — ROTEAMENTO
+   ===================================================================== */
+const TITULOS = {
+  inicio:["Quarto Passo","Inventário moral"], ressentimentos:["Ressentimentos","Parte 1"],
+  editarRes:["Ressentimento","Parte 1"], medos:["Medos","Parte 2"], editarMedo:["Medo","Parte 2"],
+  conduta:["Conduta afetiva","Parte 3"], editarCond:["Registro","Parte 3"],
+  danos:["Danos causados","Parte 4"], editarDano:["Pessoa prejudicada","Parte 4"],
+  linhavida:["Linha da vida","Parte 5"], areas:["Áreas da vida","Parte 6"],
+  caracter:["Defeitos e qualidades","Parte 7"], editarEpi:["Episódio","Parte 7"],
+  guardado:["O que nunca contei","Parte 8"], sintese:["Síntese","Parte 9"],
+  quintopasso:["Quinto Passo","Parte 10"], leitura:["Meu inventário","Texto aberto"], ajustes:["Ajustes",""]
+};
+const VOLTA = { editarRes:"ressentimentos", editarMedo:"medos", editarCond:"conduta",
+  editarDano:"danos", editarEpi:"caracter", leitura:"quintopasso" };
+const PARTE_IDS = ["ressentimentos","medos","conduta","danos","linhavida","areas","caracter","guardado","sintese"];
+
+function ir(secao, param){
+  if(!destrancado) return;
+  if(PARTE_IDS.includes(secao) && E.ultima !== secao){ E.ultima = secao; salvar(true); }
+  rota = { secao, param:param||null };
+  render();
+  window.scrollTo(0,0);
+}
+
+function render(){
+  if(!destrancado) return;
+  document.getElementById("tela").innerHTML = (Telas[rota.secao] || Telas.inicio)();
+  const [t,s] = TITULOS[rota.secao] || ["Quarto Passo",""];
+  document.getElementById("cab-tit").textContent = t;
+  document.getElementById("cab-sub").textContent = s;
+  document.getElementById("cab").classList.toggle("interna", rota.secao !== "inicio");
+
+  const abas = [
+    ["inicio","Início",'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>'],
+    [E.ultima || "ressentimentos","Escrever",'<path d="M4 20h16"/><path d="M14.5 4.5a2.1 2.1 0 0 1 3 3L8 17l-4 1 1-4Z"/>'],
+    ["quintopasso","5.º Passo",'<path d="M20 6 9 17l-5-5"/>'],
+    ["ajustes","Ajustes",'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1 2 2 0 1 1-4 0 1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 15a2 2 0 1 1 0-4 1.6 1.6 0 0 0 1.5-2.6l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 4.6a2 2 0 1 1 4 0 1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.6 1.6 0 0 0 21 11a2 2 0 1 1 0 4Z"/>']
+  ];
+  const atual = rota.secao==="inicio" ? "inicio" : rota.secao==="ajustes" ? "ajustes"
+    : (rota.secao==="quintopasso"||rota.secao==="leitura") ? "quintopasso" : (E.ultima||"ressentimentos");
+  document.getElementById("barra").innerHTML = abas.map(([id,r,d])=>
+    `<button data-acao="ir" data-valor="${id}" ${atual===id?'aria-current="page"':""}>
+      <svg viewBox="0 0 24 24">${d}</svg>${r}</button>`).join("");
+}
+
+function entrar(){
+  destrancado = true;
+  document.getElementById("portao").classList.remove("ver");
+  document.getElementById("portao-conteudo").innerHTML = "";   // não deixa a senha no DOM
+  ["cab","tela","barra"].forEach(i=>document.getElementById(i).classList.remove("oculto"));
+  rota = { secao:"inicio", param:null };
+  render();
+  reiniciarOcioso();
+}
+
+/* =====================================================================
+   PARTE 13 — AÇÕES DO PORTÃO
+   ===================================================================== */
+async function criarCofre(migrando){
+  const s1 = document.getElementById("s1").value;
+  const s2 = document.getElementById("s2").value;
+  if(s1.length < 8) return (migrando?telaMigrar:telaCriar)("A senha precisa de pelo menos 8 caracteres.");
+  if(s1 !== s2)     return (migrando?telaMigrar:telaCriar)("As duas senhas não conferem.");
+  if(forcaSenha(s1).n < 30) return (migrando?telaMigrar:telaCriar)("Essa senha é fraca demais para este conteúdo. Use uma frase de três ou mais palavras.");
+
+  const btn = document.querySelector('[data-acao="'+(migrando?"migrar":"criar-cofre")+'"]');
+  if(btn){ btn.disabled = true; btn.textContent = "Cifrando…"; }
+
+  let base = estadoInicial();
+  if(migrando){
+    const antigo = await Deposito.ler(CHAVE_ANTIGA);
+    if(antigo){ try{ base = Object.assign(estadoInicial(), JSON.parse(antigo)); }catch(e){} }
+    base.versao = 2; delete base.pin;
+  }
+  await Cofre.criar(s1, base);
+  if(migrando) await Deposito.remover(CHAVE_ANTIGA);
+  await Tentativas.zerar();
+  E = base;
+  entrar();
+  toast(migrando ? "Inventário cifrado" : "Cofre criado");
+}
+
+async function abrirCofre(){
+  const campo = document.getElementById("sen");
+  if(!campo) return;
+  const senha = campo.value;
+  if(!senha) return;
+  const btn = document.getElementById("btn-abrir");
+  if(btn){ btn.disabled = true; btn.textContent = "Abrindo…"; }
+  campo.disabled = true;
+  try{
+    const dados = await Cofre.abrir(senha);
+    await Tentativas.zerar();
+    E = Object.assign(estadoInicial(), dados);
+    entrar();
+  }catch(e){
+    await Tentativas.errou();
+    telaDestrancar("Senha incorreta.");
+  }
+}
+
+/* =====================================================================
+   PARTE 14 — AÇÕES DO APP
+   ===================================================================== */
+const alterna = (arr,v) => { const i = arr.indexOf(v); if(i>=0) arr.splice(i,1); else arr.push(v); };
+const achar = (l,id) => l.find(x=>x.id===id);
+
+function baixar(nome, texto, tipo){
+  const b = new Blob([texto], { type:tipo || "application/json" });
+  const u = URL.createObjectURL(b), a = document.createElement("a");
+  a.href = u; a.download = nome; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(u), 1500);
+}
+
+document.addEventListener("click", async ev => {
+  const el = ev.target.closest("[data-acao]");
+  if(!el) return;
+  const a = el.dataset.acao, v = el.dataset.valor;
+
+  /* --- portão --- */
+  if(a === "criar-cofre") return criarCofre(false);
+  if(a === "migrar")      return criarCofre(true);
+  if(a === "abrir-cofre") return abrirCofre();
+  if(a === "esqueci"){
+    alert("Não há como recuperar a senha.\n\nO inventário é cifrado com ela, e a senha não fica gravada em lugar nenhum — nem neste aparelho, nem em qualquer servidor. Sem ela, o conteúdo é matematicamente inacessível.\n\nSe você tem uma cópia de segurança e lembra da senha dela, restaure-a. Caso contrário, a única saída é apagar tudo e recomeçar, o que se faz reinstalando o app.");
+    return;
+  }
+  if(!destrancado) return;
+
+  /* --- navegação --- */
+  if(a === "ir"){ ir(v); return; }
+
+  /* --- ressentimentos --- */
+  if(a === "novo-res"){ const r={id:uid(),atinge:[]}; E.ressentimentos.unshift(r); salvar(true); ir("editarRes", r.id); return; }
+  if(a === "edit-res"){ ir("editarRes", v); return; }
+  if(a === "del-res"){ if(confirm("Excluir este ressentimento?")){ E.ressentimentos = E.ressentimentos.filter(x=>x.id!==v); salvar(); render(); } return; }
+  if(a === "res-atinge"){ const r = achar(E.ressentimentos, rota.param); if(r){ r.atinge = r.atinge||[]; alterna(r.atinge, v); salvar(true); render(); } return; }
+
+  /* --- medos --- */
+  if(a === "medo-chip"){ alterna(E.medosMarcados, v); salvar(true); render(); return; }
+  if(a === "novo-medo"){ const m={id:uid()}; E.medos.unshift(m); salvar(true); ir("editarMedo", m.id); return; }
+  if(a === "edit-medo"){ ir("editarMedo", v); return; }
+  if(a === "del-medo"){ if(confirm("Excluir este medo?")){ E.medos = E.medos.filter(x=>x.id!==v); salvar(); render(); } return; }
+  if(a === "medo-peso"){ const m = achar(E.medos, rota.param); if(m){ m.peso = +v; salvar(true); render(); } return; }
+
+  /* --- conduta --- */
+  if(a === "novo-cond"){ const c={id:uid()}; E.conduta.unshift(c); salvar(true); ir("editarCond", c.id); return; }
+  if(a === "edit-cond"){ ir("editarCond", v); return; }
+  if(a === "del-cond"){ if(confirm("Excluir este registro?")){ E.conduta = E.conduta.filter(x=>x.id!==v); salvar(); render(); } return; }
+
+  /* --- danos --- */
+  if(a === "novo-dano"){ const d={id:uid()}; E.danos.unshift(d); salvar(true); ir("editarDano", d.id); return; }
+  if(a === "edit-dano"){ ir("editarDano", v); return; }
+  if(a === "del-dano"){ if(confirm("Excluir esta pessoa da lista?")){ E.danos = E.danos.filter(x=>x.id!==v); salvar(); render(); } return; }
+
+  /* --- áreas --- */
+  if(a.startsWith("area-")){ E.areas[a.slice(5)] = +v; salvar(true); render(); return; }
+
+  /* --- caráter --- */
+  if(a === "def-chip"){ alterna(E.defeitos, v); salvar(true); render(); return; }
+  if(a === "qual-chip"){ alterna(E.qualidades, v); salvar(true); render(); return; }
+  if(a === "novo-epi"){ const e={id:uid()}; E.defeitosEpisodios.unshift(e); salvar(true); ir("editarEpi", e.id); return; }
+  if(a === "edit-epi"){ ir("editarEpi", v); return; }
+  if(a === "del-epi"){ if(confirm("Excluir este episódio?")){ E.defeitosEpisodios = E.defeitosEpisodios.filter(x=>x.id!==v); salvar(); render(); } return; }
+
+  /* --- quinto passo --- */
+  if(a === "chk"){ alterna(E.checklist, +v); salvar(true); render(); return; }
+  if(a === "gerar-leitura"){ ir("leitura"); return; }
+  if(a === "copiar"){
+    try{ await navigator.clipboard.writeText(montarTexto()); toast("Copiado. Apague a área de transferência depois."); }
+    catch(e){ toast("Selecione o texto e copie manualmente"); }
+    return;
+  }
+  if(a === "imprimir"){ window.print(); return; }
+
+  /* --- ajustes --- */
+  if(a === "trava-min"){ E.travaMin = +v; salvar(); render(); reiniciarOcioso(); return; }
+
+  if(a === "exportar"){
+    await salvarJa();
+    baixar("quarto-passo-" + new Date().toISOString().slice(0,10) + ".qp",
+      JSON.stringify({ tipo:"quarto-passo-cifrado", v:2, salt:metaCofre.salt,
+        iters:metaCofre.iters, iv:metaCofre.iv, ct:metaCofre.ct }, null, 2));
+    toast("Cópia cifrada baixada");
+    return;
+  }
+  if(a === "exportar-claro"){
+    if(!confirm("Este arquivo NÃO terá proteção alguma. Qualquer pessoa que o abrir lerá todo o seu inventário.\n\nContinuar?")) return;
+    if(!confirm("Confirma? Use apenas para imprimir e destrua o arquivo em seguida.")) return;
+    baixar("quarto-passo-SEM-PROTECAO-" + new Date().toISOString().slice(0,10) + ".txt",
+      montarTexto(), "text/plain;charset=utf-8");
+    toast("Arquivo sem proteção baixado");
+    return;
+  }
+  if(a === "importar"){ document.getElementById("arq").click(); return; }
+
+  if(a === "trocar-senha"){
+    const atual = prompt("Digite sua senha atual:");
+    if(atual === null) return;
+    try{ await Cofre.abrir(atual); }
+    catch(e){ alert("Senha atual incorreta."); return; }
+    const nova = prompt("Nova senha (mínimo 8 caracteres, de preferência uma frase):");
+    if(nova === null) return;
+    if(nova.length < 8 || forcaSenha(nova).n < 30){ alert("Senha muito fraca. Use uma frase de três ou mais palavras."); return; }
+    if(prompt("Repita a nova senha:") !== nova){ alert("As senhas não conferem."); return; }
+    await Cofre.trocarSenha(nova, E);
+    toast("Senha trocada");
+    return;
+  }
+
+  if(a === "apagar"){
+    if(!confirm("Apagar todo o inventário deste aparelho? Não há como desfazer.")) return;
+    if(!confirm("Confirma? Se ainda não baixou uma cópia, ela será perdida para sempre.")) return;
+    await Cofre.destruir();
+    E = estadoInicial(); destrancado = false;
+    document.getElementById("tela").innerHTML = "";
+    ["cab","tela","barra"].forEach(i=>document.getElementById(i).classList.add("oculto"));
+    telaCriar();
+    return;
+  }
+});
+
+/* Bloquear agora */
+document.getElementById("btn-travar").addEventListener("click", () => bloquear("Trancado por você."));
+document.getElementById("btn-voltar").addEventListener("click", () => ir(VOLTA[rota.secao] || "inicio"));
+
+/* Digitação */
+document.addEventListener("input", ev => {
+  const el = ev.target.closest("[data-acao]");
+  if(!el || !("value" in el) || !destrancado) return;
+  const a = el.dataset.acao, v = el.value;
+  const R=()=>achar(E.ressentimentos,rota.param), M=()=>achar(E.medos,rota.param),
+        Cd=()=>achar(E.conduta,rota.param), D=()=>achar(E.danos,rota.param),
+        Ep=()=>achar(E.defeitosEpisodios,rota.param);
+  const mapa = {
+    "res-quem":()=>{const o=R(); if(o) o.quem=v;}, "res-oque":()=>{const o=R(); if(o) o.oque=v;},
+    "res-parte":()=>{const o=R(); if(o) o.parte=v;},
+    "medo-nome":()=>{const o=M(); if(o) o.nome=v;}, "medo-origem":()=>{const o=M(); if(o) o.origem=v;},
+    "medo-efeito":()=>{const o=M(); if(o) o.efeito=v;},
+    "cond-quem":()=>{const o=Cd(); if(o) o.quem=v;}, "cond-oque":()=>{const o=Cd(); if(o) o.oque=v;},
+    "cond-dano":()=>{const o=Cd(); if(o) o.dano=v;}, "cond-raiz":()=>{const o=Cd(); if(o) o.raiz=v;},
+    "dano-quem":()=>{const o=D(); if(o) o.quem=v;}, "dano-oque":()=>{const o=D(); if(o) o.oque=v;},
+    "dano-reparo":()=>{const o=D(); if(o) o.reparo=v;},
+    "epi-defeito":()=>{const o=Ep(); if(o) o.defeito=v;}, "epi-episodio":()=>{const o=Ep(); if(o) o.episodio=v;},
+    "epi-quem":()=>{const o=Ep(); if(o) o.quem=v;}, "epi-raiz":()=>{const o=Ep(); if(o) o.raiz=v;}
+  };
+  if(mapa[a]) mapa[a]();
+  else if(a.startsWith("medo-m")) E.medosTexto[a.slice(5)] = v;
+  else if(a.startsWith("lv-"))    E.linhaVida[a.slice(3)] = v;
+  else if(a.startsWith("gu-"))    E.guardado.texto[a.slice(3)] = v;
+  else if(a.startsWith("sin-"))   E.sintese[a.slice(4)] = v;
+  else return;
+  salvar(true);
+});
+
+/* Restaurar cópia cifrada */
+document.addEventListener("change", ev => {
+  if(ev.target.id !== "arq") return;
+  const f = ev.target.files[0];
+  ev.target.value = "";
+  if(!f) return;
+  const fr = new FileReader();
+  fr.onload = async () => {
+    let d;
+    try{ d = JSON.parse(fr.result); }
+    catch(e){ alert("Arquivo inválido."); return; }
+    if(!d || !d.ct || !d.salt || !d.iv){ alert("Este arquivo não é uma cópia cifrada deste app."); return; }
+    const senha = prompt("Senha da cópia que você está restaurando:");
+    if(senha === null) return;
+    try{
+      const chave = await derivar(senha, deB64(d.salt), d.iters || ITERACOES);
+      const dados = await decifrar(chave, d.iv, d.ct);
+      if(!confirm("Restaurar esta cópia? O inventário atual neste aparelho será substituído.")) return;
+      E = Object.assign(estadoInicial(), dados);
+      await Cofre.gravar(E);      // regrava com a senha ATUAL do aparelho
+      ir("inicio");
+      toast("Cópia restaurada");
+    }catch(e){ alert("Senha incorreta para este arquivo, ou arquivo corrompido."); }
+  };
+  fr.readAsText(f);
+});
+
+/* =====================================================================
+   PARTE 15 — PARTIDA
+   ===================================================================== */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+
+(async function(){
+  document.getElementById("emb-cab").innerHTML = emblema(34, "#FFFFFF");
+  if(!temCripto()){ telaSemCripto(); return; }
+  await Deposito.iniciar();
+  await Cofre.carregarMeta();
+  if(Cofre.existe()) return telaDestrancar();
+  const antigo = await Deposito.ler(CHAVE_ANTIGA);
+  if(antigo) return telaMigrar();
+  telaCriar();
+})();
+</script>
+</body>
+</html>

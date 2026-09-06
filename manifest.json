@@ -1,0 +1,19 @@
+{
+  "name": "Quarto Passo — Inventário moral",
+  "short_name": "Quarto Passo",
+  "description": "Caderno pessoal para o Quarto Passo de Alcoólicos Anônimos. Todo o conteúdo fica apenas neste aparelho.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F2E5C",
+  "theme_color": "#0F2E5C",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["lifestyle", "health"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
